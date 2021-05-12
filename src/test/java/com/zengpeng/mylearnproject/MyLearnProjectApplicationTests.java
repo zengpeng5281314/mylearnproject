@@ -21,6 +21,9 @@ class MyLearnProjectApplicationTests {
     void contextLoads() {
         TestModel testModel = testModelService.findOneByIDSB(4);
         System.out.println("--------" + JSONObject.toJSONString(testModel));
+
+//        TestModel testModel1 = testModelService.getTestModelByNameSE("你是");
+//        System.out.println("--------" + JSONObject.toJSONString(testModel1));
 //        TestModel testModel2= testDTORepository.getTestModelSEFS(4);
 //        System.out.println("--------" + JSONObject.toJSONString(testModel2));
 
