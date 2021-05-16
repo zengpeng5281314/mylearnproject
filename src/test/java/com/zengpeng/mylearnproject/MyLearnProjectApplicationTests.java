@@ -1,13 +1,23 @@
 package com.zengpeng.mylearnproject;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.zengpeng.mylearnproject.dao.TimeLineEntityRepository;
+import com.zengpeng.mylearnproject.entity.TimeLineModelEntity;
 import com.zengpeng.mylearnproject.mongodb.dal.TestDTORepository;
-import com.zengpeng.mylearnproject.mongodb.model.TestModel;
+import com.zengpeng.mylearnproject.mongodb.dal.TimeLineRepository;
+import com.zengpeng.mylearnproject.mongodb.model.TimeLineModel;
 import com.zengpeng.mylearnproject.mongodb.service.TestModelService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @SpringBootTest
 class MyLearnProjectApplicationTests {
@@ -16,17 +26,58 @@ class MyLearnProjectApplicationTests {
     private TestModelService testModelService;
     @Autowired
     private TestDTORepository testDTORepository;
+    @Autowired
+    private TimeLineRepository timeLineRepository;
+    @Autowired
+    private TimeLineEntityRepository timeLineEntityRepository;
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Test
     void contextLoads() {
-        TestModel testModel = testModelService.findOneByIDSB(4);
-        System.out.println("--------" + JSONObject.toJSONString(testModel));
+
+        System.out.println("11111111111  start:"+sdf.format(new Date()));
+        for (int i = 0; i < 10; i++) {
+            ccccc(i);
+        }
+
+        System.out.println("11111111111  end:"+sdf.format(new Date()));
+
+//        TestModel testModel = testModelService.findOneByIDSB(4);
+//        System.out.println("--------" + JSONObject.toJSONString(testModel));
 
 //        TestModel testModel1 = testModelService.getTestModelByNameSE("你是");
 //        System.out.println("--------" + JSONObject.toJSONString(testModel1));
 //        TestModel testModel2= testDTORepository.getTestModelSEFS(4);
 //        System.out.println("--------" + JSONObject.toJSONString(testModel2));
 
+    }
+
+    private void ccccc(int i) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(i, 10000, sort);
+        Page<TimeLineModelEntity> page = timeLineEntityRepository.findAll(pageable);
+        if (!page.isEmpty()) {
+            List<TimeLineModelEntity> list = page.getContent();
+            List<TimeLineModel> list2 = new ArrayList<>();
+            list.stream().forEach(timeLineModelEntity -> {
+                TimeLineModel timeLineModelOld = timeLineRepository.getTestModelByIdIs(timeLineModelEntity.getId());
+               TimeLineModel timeLineModel = testModelService.conversionTimeLineModel(timeLineModelEntity);
+                if (timeLineModelOld != null) {
+                    //修改
+                   timeLineModelOld = timeLineModelOld.updateTimeLineModel(timeLineModel);
+                    list2.add(timeLineModelOld);
+//                    timeLineRepository.save(timeLineModelOld);
+                  } else {
+                    list2.add(timeLineModel);
+                    //新增
+//                    timeLineRepository.save(timeLineModel);
+                 }
+
+
+            });
+            timeLineRepository.saveAll(list2);
+        }
     }
 
 }

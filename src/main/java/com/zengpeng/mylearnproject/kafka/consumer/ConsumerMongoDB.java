@@ -25,7 +25,7 @@ public class ConsumerMongoDB {
     @Autowired
     private TestModelService testModelService;
 
-    @KafkaListener(topics = "${spring.kafka.template.mongo_db_test}")
+//    @KafkaListener(topics = "${spring.kafka.template.mongo_db_test}")
     public boolean mongo_db_test(ConsumerRecord<String, String> record , Acknowledgment ack) throws Exception {
         logger.info("listen mongo_db_test start:");
 
@@ -68,7 +68,7 @@ public class ConsumerMongoDB {
             }
 
             //提交offset
-//            ack.acknowledge();
+            ack.acknowledge();
             return true;
         } catch (Exception e) {
             logger.info(message.toJSONString());

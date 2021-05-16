@@ -21,7 +21,7 @@ public class ConsumerMongoDBTimeLine {
     @Autowired
     private TimeLineRepository timeLineRepository;
 
-    @KafkaListener(topics = "${spring.kafka.template.mongo_db_timeline}")
+//    @KafkaListener(topics = "${spring.kafka.template.mongo_db_timeline}")
     public boolean saveTimeLine(ConsumerRecord<String, String> record, Acknowledgment ack) {
         logger.info("listen saveTimeLine start:");
         JSONObject message = JSONObject.parseObject(record.value());
@@ -47,7 +47,7 @@ public class ConsumerMongoDBTimeLine {
                 } else if (type.equals("DELETE")) {
                     //删除数据
                     for (int i = 0; i < data.size(); i++) {
-                        TimeLineModel timeLineModel = JSONObject.parseObject(data.toString(), TimeLineModel.class);
+                        TimeLineModel timeLineModel = JSONObject.parseObject(data.getJSONObject(i).toString(), TimeLineModel.class);
                         TimeLineModel timeLineModelOld = timeLineRepository.getTestModelByIdIs(timeLineModel.getId());
                         timeLineRepository.delete(timeLineModelOld);
                     }
@@ -57,6 +57,7 @@ public class ConsumerMongoDBTimeLine {
             }
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.info(message.toJSONString());
             logger.error(e.getMessage());
             return false;

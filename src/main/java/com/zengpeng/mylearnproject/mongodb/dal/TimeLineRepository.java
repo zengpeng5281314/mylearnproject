@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TimeLineRepository extends MongoRepository<TimeLineModel, String> {
 
-    TimeLineModel getTestModelByIdIs(int id);
+    TimeLineModel getTestModelByIdIs(Long id);
 
 }
