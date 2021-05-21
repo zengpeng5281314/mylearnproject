@@ -7,8 +7,7 @@ import com.zengpeng.mylearnproject.mongodb.model.TimeLineModel;
 import com.zengpeng.mylearnproject.mongodb.service.TestModelService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -32,48 +31,52 @@ public class TestModelServiceImpl implements TestModelService {
 //        return mongoTemplate.findOne(query,TestModel.class);
 
 
-
         TestModel testModel = new TestModel();
         testModel.setId(id);
         //此处是根据指定条件精确查询
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
-                .withIgnoreNullValues().withIgnorePaths("intRefNo").withIgnorePaths("intRefType")
+                .withIgnoreNullValues()
                 .withMatcher("id", ExampleMatcher.GenericPropertyMatchers.contains())
-            .withIgnorePaths("sex");
+            .withIgnorePaths("sex","_class");
         Example<TestModel> example = Example.of(testModel,matcher);
 
         Optional<TestModel> optional = testDTORepository.findOne(example);
         if(optional.isPresent())
             return optional.get();
-//
-//        List<TestModel> list = testDTORepository.findAll(example);
-//        if(list!=null&&list.size()>0)
-//            return list.get(0);
         return null;
     }
 
     @Override
-    public TestModel getTestModelByNameSE(String name) {
-
-
-
+    public List<TestModel> getTestModelByName(String name) {
         TestModel testModel = new TestModel();
         testModel.setName(name);
         //此处是根据指定条件精确查询
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains());
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains ())
+                .withIgnorePaths("sex","id","_class");
         Example<TestModel> example = Example.of(testModel,matcher);
-
-//        Optional<TestModel> optional = testDTORepository.findOne(example);
-//        if(optional.isPresent())
-//            return optional.get();
-
         List<TestModel> list = testDTORepository.findAll(example);
-        if(list!=null&&list.size()>0)
-            return list.get(0);
-        return null;
+        return list;
+    }
+
+    @Override
+    public Page<TestModel> getTestModelByName2(String name) {
+        TestModel testModel = new TestModel();
+        testModel.setName(name);
+        //此处是根据指定条件模糊查找
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains ())
+                .withIgnorePaths("sex","id","_class");
+        Example<TestModel> example = Example.of(testModel,matcher);
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(0, 10, sort);
+        Page<TestModel> page = testDTORepository.findAll(example,pageable);
+        return page;
     }
 
     @Override

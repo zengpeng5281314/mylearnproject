@@ -1,9 +1,12 @@
 package com.zengpeng.mylearnproject;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.zengpeng.mylearnproject.dao.TimeLineEntityRepository;
 import com.zengpeng.mylearnproject.entity.TimeLineModelEntity;
 import com.zengpeng.mylearnproject.mongodb.dal.TestDTORepository;
 import com.zengpeng.mylearnproject.mongodb.dal.TimeLineRepository;
+import com.zengpeng.mylearnproject.mongodb.model.TestModel;
 import com.zengpeng.mylearnproject.mongodb.model.TimeLineModel;
 import com.zengpeng.mylearnproject.mongodb.service.TestModelService;
 import org.junit.jupiter.api.Test;
@@ -36,21 +39,28 @@ class MyLearnProjectApplicationTests {
     @Test
     void contextLoads() {
 
-        System.out.println("11111111111  start:"+sdf.format(new Date()));
-        for (int i = 0; i < 10; i++) {
-            ccccc(i);
-        }
+//        System.out.println("11111111111  start:"+sdf.format(new Date()));
+//        for (int i = 0; i < 10; i++) {
+//            ccccc(i);
+//        }
 
         System.out.println("11111111111  end:"+sdf.format(new Date()));
 
-//        TestModel testModel = testModelService.findOneByIDSB(4);
-//        System.out.println("--------" + JSONObject.toJSONString(testModel));
+        TestModel testModel = testModelService.findOneByIDSB(4);
+        System.out.println("--------" + JSONObject.toJSONString(testModel));
 
-//        TestModel testModel1 = testModelService.getTestModelByNameSE("你是");
-//        System.out.println("--------" + JSONObject.toJSONString(testModel1));
-//        TestModel testModel2= testDTORepository.getTestModelSEFS(4);
-//        System.out.println("--------" + JSONObject.toJSONString(testModel2));
+        List<TestModel> testModel2 = testDTORepository.getTestModelByName("您好");
+        System.out.println("--------" + JSONObject.toJSONString(testModel2.get(0)));
+        List<TestModel> testModel1 = testModelService.getTestModelByName("四");
+        System.out.println("--------" + JSONArray.toJSONString(testModel1));
+//        TestModel testModel23= testDTORepository.getTestModelSEFS(4);
+//        System.out.println("--------" + JSONObject.toJSONString(testModel23));
 
+        Page<TestModel> page = testModelService.getTestModelByName2("四");
+        if(!page.isEmpty()){
+           List<TestModel> list2 = page.getContent();
+            System.out.println("--------size:" +page.getSize()+"  getTotalElements:"+page.getTotalElements()+"   "+ JSONArray.toJSONString(list2));
+        }
     }
 
     private void ccccc(int i) {

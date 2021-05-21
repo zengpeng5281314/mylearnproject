@@ -3,6 +3,7 @@ package com.zengpeng.mylearnproject.mongodb.model;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
@@ -15,5 +16,6 @@ public class TestModel {
     private int id;
     private String name;
     private int sex;
+    @Field(value = "createtime")
     private Date createTime;
 }

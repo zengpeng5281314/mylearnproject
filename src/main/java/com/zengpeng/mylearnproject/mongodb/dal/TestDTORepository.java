@@ -14,4 +14,7 @@ public interface TestDTORepository extends MongoRepository<TestModel, String> {
 
     @Query(value="{'id':?0}")
     TestModel getTestModelSEFS(int id);
+
+    @Query(value="{'name':?0}")
+    List<TestModel> getTestModelByName(String name);
 }
