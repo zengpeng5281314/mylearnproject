@@ -51,7 +51,7 @@ public class TestModelServiceImpl implements TestModelService {
     public List<TestModel> getTestModelByName(String name) {
         TestModel testModel = new TestModel();
         testModel.setName(name);
-        //此处是根据指定条件精确查询
+        //此处是根据指定条件模糊查找
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
