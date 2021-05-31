@@ -10,11 +10,13 @@ import java.util.List;
 
 public interface TestModelService {
 
-    public TestModel findOneByIDSB(int id);
+    TestModel findOneByIDSB(int id);
 
-    public List<TestModel> getTestModelByName(String name);
+    TestModel mongoTemplateById(int id);
 
-    public Page<TestModel> getTestModelByName2(String name);
+    List<TestModel> getTestModelByName(String name);
 
-    public TimeLineModel conversionTimeLineModel(TimeLineModelEntity timeLineModelEntity);
+    Page<TestModel> getTestModelByName2(String name);
+
+    TimeLineModel conversionTimeLineModel(TimeLineModelEntity timeLineModelEntity);
 }

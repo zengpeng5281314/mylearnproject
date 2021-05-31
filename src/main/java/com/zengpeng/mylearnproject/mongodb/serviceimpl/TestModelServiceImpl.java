@@ -26,11 +26,13 @@ public class TestModelServiceImpl implements TestModelService {
     private MongoTemplate mongoTemplate;
 
     @Override
+    public TestModel mongoTemplateById(int id){
+        Query query=new Query(Criteria.where("id").is(id));
+        return mongoTemplate.findOne(query,TestModel.class);
+    }
+
+    @Override
     public TestModel findOneByIDSB(int id) {
-//        Query query=new Query(Criteria.where("id").is(id));
-//        return mongoTemplate.findOne(query,TestModel.class);
-
-
         TestModel testModel = new TestModel();
         testModel.setId(id);
         //此处是根据指定条件精确查询
